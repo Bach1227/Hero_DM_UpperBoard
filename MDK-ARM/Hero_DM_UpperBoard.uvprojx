@@ -10,7 +10,7 @@
       <TargetName>Hero_DM_UpperBoard</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -137,7 +137,7 @@
             <DriverSelection>4101</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
-          <Flash2>BIN\UL2V8M.DLL</Flash2>
+          <Flash2>BIN\UL2CM3.DLL</Flash2>
           <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
@@ -596,9 +596,6 @@
               <FilePath>..\Bsp\JudgerSystem.h</FilePath>
             </File>
           </Files>
-        </Group>
-        <Group>
-          <GroupName>::CMSIS</GroupName>
         </Group>
         <Group>
           <GroupName>Drivers/STM32H7xx_HAL_Driver</GroupName>
@@ -2483,6 +2480,9 @@
               </FileOption>
             </File>
           </Files>
+        </Group>
+        <Group>
+          <GroupName>::CMSIS</GroupName>
         </Group>
       </Groups>
     </Target>

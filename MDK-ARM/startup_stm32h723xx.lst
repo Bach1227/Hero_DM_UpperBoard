@@ -1273,10 +1273,10 @@ min/STM32Cube/Repository/STM32Cube_FW_H7_V1.12.1/Middlewares/Third_Party/FreeRT
 OS/Source/portable/RVDS/ARM_CM4F -IC:/Users/Admin/STM32Cube/Repository/STM32Cub
 e_FW_H7_V1.12.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include -IC:/Users/Admin/STM3
 2Cube/Repository/STM32Cube_FW_H7_V1.12.1/Drivers/CMSIS/Include -I../Drivers/CMS
-IS/Include -I.\RTE\_Hero_DM_UpperBoard -ID:\Keil\ARM\PACK\ARM\CMSIS\5.9.0\CMSIS
-\Core\Include --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SE
-TA 538" --predefine="_RTE_ SETA 1" --predefine="STM32H723xx SETA 1" --predefine
-="_RTE_ SETA 1" --list=startup_stm32h723xx.lst startup_stm32h723xx.s
+IS/Include -I.\RTE\_Hero_DM_UpperBoard -ID:\KeilPack\ARM\CMSIS\5.9.0\CMSIS\Core
+\Include --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 53
+9" --predefine="_RTE_ SETA 1" --predefine="STM32H723xx SETA 1" --predefine="_RT
+E_ SETA 1" --list=startup_stm32h723xx.lst startup_stm32h723xx.s
 
 
 

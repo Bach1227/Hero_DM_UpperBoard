@@ -1,7 +1,7 @@
 #include "FrictionController.h"
 
 #define Accelation_Period 2000 // 1s
-#define FrictionTargetSpeedDef 10
+#define FrictionTargetSpeedDef 22
 
 float TargetSpeed = 0;
 uint8_t Friction_Enable = 0;
@@ -21,6 +21,9 @@ uint8_t FrictionState = 0;
 SlinePlanner_t FrictionSline;
 
 TaskHandle_t InitTaskHandle;
+
+uint16_t canid = 0x123;
+
 
 extern imu_t imu;
 imu_t test_imu;
@@ -147,7 +150,7 @@ void FrictionController_SetSpeed(void)
 {   
     if (Friction_Enable == 1)
     {
-        FrictionSline.Target_Speed = 18;
+        FrictionSline.Target_Speed = FrictionTargetSpeedDef;
         MoveControl_SpeedPlanning(&FrictionSline);
     }
     else
@@ -335,24 +338,24 @@ void FrictionController_Parse(uint8_t *data)
         AnamyColor = 0;
     }
 
-    // roll_rad = ToRad(imu.roll);
-    // pitch_rad = ToRad(imu.pitch);
-    // yaw_rad = ToRad(yaw_gimbal);
-    // euler_to_quaternion_wxyz(roll_rad, pitch_rad, yaw_rad, q);
-    // quaternion_to_euler_wxyz(q, &test_imu);
-    // uintq[0] = floatToUnit(q[0], -1, 1, 16);
-    // uintq[1] = floatToUnit(q[1], -1, 1, 16);
-    // uintq[2] = floatToUnit(q[2], -1, 1, 16);
-    // uintq[3] = floatToUnit(q[3], -1, 1, 16);
-    // send[0] = uintq[0] >> 8;
-    // send[1] = uintq[0] & 0xff;
-    // send[2] = uintq[1] >> 8;
-    // send[3] = uintq[1] & 0xff;
-    // send[4] = uintq[2] >> 8;
-    // send[5] = uintq[2] & 0xff;
-    // send[6] = uintq[3] >> 8;
-    // send[7] = uintq[3] & 0xff;
-    // CAN_Transmit_STD(&hfdcan2, canid, send, 8);
+    roll_rad = ToRad(imu.roll);
+    pitch_rad = ToRad(imu.pitch);
+    yaw_rad = ToRad(yaw_gimbal);
+    euler_to_quaternion_wxyz(roll_rad, pitch_rad, yaw_rad, q);
+    quaternion_to_euler_wxyz(q, &test_imu);
+    uintq[0] = floatToUnit(q[0], -1, 1, 16);
+    uintq[1] = floatToUnit(q[1], -1, 1, 16);
+    uintq[2] = floatToUnit(q[2], -1, 1, 16);
+    uintq[3] = floatToUnit(q[3], -1, 1, 16);
+    send[0] = uintq[0] >> 8;
+    send[1] = uintq[0] & 0xff;
+    send[2] = uintq[1] >> 8;
+    send[3] = uintq[1] & 0xff;
+    send[4] = uintq[2] >> 8;
+    send[5] = uintq[2] & 0xff;
+    send[6] = uintq[3] >> 8;
+    send[7] = uintq[3] & 0xff;
+    CAN_Transmit_STD(&hfdcan2, canid, send, 8);
     // CAN_Transmit_STD(&hfdcan2, 0x105, msg, 8);
     if (data[2] == 1)
     {
@@ -392,7 +395,6 @@ void SendAngle(void)
 {
     // uint8_t temp[8] = {0xFF, 0xFF,0xFF, 0xFF,0xFF, 0xFF,0xFF, 0xFF};
 
-    uint16_t canid = 0x123;
 
     if (AnamyColor == 1)
     {
@@ -433,34 +435,42 @@ void SendAngle(void)
 void FrictionMotorInit_Task(void* arg)
 {
     MoveControl_SlinePlannerInit(&FrictionSline, 500, 0.5);
-    while (IsFriciton1Online != 1 || IsFriciton2Online != 1 || IsFriciton3Online != 1 || IsFriciton4Online != 1)
-    {
-        if (IsFriciton1Online != 1)
-        {
-            DM_Motor_Enable(&hfdcan2, 0x20);
-        }
-        if (IsFriciton2Online != 1)
-        {
-            DM_Motor_Enable(&hfdcan2, 0x21);
-        }
-        if (IsFriciton3Online != 1)
-        {
-            DM_Motor_Enable(&hfdcan2, 0x22);
-        }
-        if (IsFriciton4Online != 1)
-        {
-            DM_Motor_Enable(&hfdcan2, 0x23);
-        }
+    // while (IsFriciton1Online != 1 || IsFriciton2Online != 1 || IsFriciton3Online != 1 || IsFriciton4Online != 1)
+    // {
+    //     if (IsFriciton1Online != 1)
+    //     {
+    //         DM_Motor_Enable(&hfdcan2, 0x20);
+    //     }
+    //     if (IsFriciton2Online != 1)
+    //     {
+    //         DM_Motor_Enable(&hfdcan2, 0x21);
+    //     }
+    //     if (IsFriciton3Online != 1)
+    //     {
+    //         DM_Motor_Enable(&hfdcan2, 0x22);
+    //     }
+    //     if (IsFriciton4Online != 1)
+        // {
+        //     DM_Motor_Enable(&hfdcan2, 0x23);
+        // }
+
         // HAL_Delay(100);
         // Osdelay(100);
-        osDelay(100);
-        
-        DM_Motor_Enable(&hfdcan2, 0x20);
-        DM_Motor_Enable(&hfdcan2, 0x21);
-        DM_Motor_Enable(&hfdcan2, 0x22);
-        DM_Motor_Enable(&hfdcan2, 0x23);
+        while(1)
+        {
+            
+            // osDelay(100);
+            DM_Motor_Enable(&hfdcan2, 0x20);
+            osDelay(25);
+            DM_Motor_Enable(&hfdcan2, 0x21);
+            osDelay(25);
+            DM_Motor_Enable(&hfdcan2, 0x22);
+            osDelay(25);
+            DM_Motor_Enable(&hfdcan2, 0x23);
+            osDelay(25);
+        }
         // }
-    }
+    // }
     vTaskDelete(NULL);
 }
 

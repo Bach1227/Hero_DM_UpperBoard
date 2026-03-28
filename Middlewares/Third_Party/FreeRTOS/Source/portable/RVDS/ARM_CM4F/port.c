@@ -508,7 +508,6 @@ void xPortSysTickHandler( void )
 	vPortRaiseBASEPRI();
 	{
 		/* Increment the RTOS tick. */
-		// if( xTaskIncrementTick() != pdFALSE )
 		if( xTaskIncrementTick() != pdFALSE )
 		{
 			/* A context switch is required.  Context switching is performed in

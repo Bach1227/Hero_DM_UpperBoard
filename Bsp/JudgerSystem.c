@@ -1,6 +1,7 @@
 #include "JudgerSystem.h"  
 
 void JudgeSystem_BasicDataParse(uint8_t* data, uint16_t length);
+TimerHandle_t ResetTimerHandle;
 
 //crc8 generator polynomial:G(x)=x8+x5+x4+1  
 const unsigned char CRC8_INIT = 0xff;  
@@ -442,6 +443,20 @@ void Parse_VTM_RC_Data(const uint8_t *rx_buf, VTM_RC_Data_t *rc_data)
 
     CAN_Transmit_STD(&hfdcan1, 0x07, chassis_cmd, 8);
     CAN_Transmit_STD(&hfdcan1, 0x08, gimbal_cmd, 8);
+
+    if ((rc_data->keyboard & 0x0130) == 0x0130)
+    {
+        // uint32_t useless;
+        // xTimerStartFromISR(ResetTimerHandle, &useless);
+    }
+    
+    if((rc_data->keyboard & 0x230) == 0x230)
+    {
+        NVIC_SystemReset();
+        // uint32_t useless;
+        // xTimerStartFromISR(ResetTimerHandle, &useless);
+    }
+
 }
 
 uint8_t JudgeSystem_VtDataParse(uint8_t* data, uint16_t length)
@@ -468,9 +483,9 @@ uint8_t JudgeSystem_VtDataParse(uint8_t* data, uint16_t length)
         
         // JudgeSystem_ChassisControlData_Pact
         // JudgeSystem_GimbalControlData_Pact
-        uint8_t test_data[8] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
-        CAN_Transmit_STD(&hfdcan1, 0x07, test_data, 8);
-        CAN_Transmit_STD(&hfdcan1, 0x08, test_data, 8);
+        // uint8_t test_data[8] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
+        // CAN_Transmit_STD(&hfdcan1, 0x07, test_data, 8);
+        // CAN_Transmit_STD(&hfdcan1, 0x08, test_data, 8);
     }
 
     return 1;
@@ -542,9 +557,16 @@ void JudgeSystem_DataParseTask(void* arg)
 
 TaskHandle_t JudgeSystem_DataParseTaskHandle;
 
+
+void JudgeSystem_ResetTimerCallback(void)
+{
+    NVIC_SystemReset();
+}
+
 uint32_t iscreated = 0;
 void JudgeSystem_Init(void)
 {
+    ResetTimerHandle = xTimerCreate("reset_timer", 2000, pdFALSE, NULL, JudgeSystem_ResetTimerCallback);
     iscreated = xTaskCreate(JudgeSystem_DataParseTask, "JudgeSystem_DataParseTask", 512, NULL, 1, &JudgeSystem_DataParseTaskHandle);
     // JudgeSystem_ReceiveStart();
 }

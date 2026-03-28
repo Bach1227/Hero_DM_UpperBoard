@@ -771,7 +771,7 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 
 			/* Allocate space for the stack used by the task being created. */
 			pxStack = pvPortMalloc( ( ( ( size_t ) usStackDepth ) * sizeof( StackType_t ) ) ); /*lint !e9079 All values returned by pvPortMalloc() have at least the alignment required by the MCU's stack and this allocation is the stack. */
-			
+
 			if( pxStack != NULL )
 			{
 				/* Allocate space for the TCB. */

@@ -23,6 +23,7 @@ void InterruptInit(void)
 {
     HAL_TIM_Base_Start_IT(&htim2);
     HAL_TIM_Base_Start_IT(&htim3);
+    HAL_TIM_Base_Start_IT(&htim5);
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart)
@@ -128,7 +129,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
         test = 0;
     }
 
-    
+    if(htim == &htim5)
+    {
+        // SendAngle();
+    }
     
     
 }
